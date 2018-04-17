@@ -1,0 +1,8 @@
+<!doctype html>
+<title>Zabbix Tools</title>
+<head>
+</head>
+<h1>Escolha uma Operação</h1>
+{% for operacao in operacoes %}
+    <li><a href="/inclusao/etapa/{{operacao}}">{{operacao}}</a> </li>
+{% endfor %}
