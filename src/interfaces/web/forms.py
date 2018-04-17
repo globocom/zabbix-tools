@@ -24,3 +24,15 @@ class AdicionarGrupoHostsForm(FlaskForm):
     hosts = TextAreaField(validators=[DataRequired()])
 
     salvar = SubmitField('Salvar')
+
+
+class RemoverGrupoHostsForm(FlaskForm):
+    nome_processo = StringField('Processo', validators=[DataRequired()])
+    nome = StringField('Nome', validators=[DataRequired()])
+    descricao = StringField('Descricao', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
+
+    grupo_removido = StringField('Nome do grupo a remover', validators=[DataRequired()])
+    hosts = TextAreaField(validators=[DataRequired()])
+
+    salvar = SubmitField('Salvar')

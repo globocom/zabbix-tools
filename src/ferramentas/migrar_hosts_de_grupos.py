@@ -18,6 +18,20 @@ def etapa_adicionar_grupo(zapi, processo, hosts, nome_etapa, descricao_etapa, ex
 
     gestor_controles.criar_etapa_faseada(processo, nome_etapa, descricao_etapa, executor_etapa, hosts_controle, atributo_modificado)
 
+def etapa_remover_grupo(zapi, processo, hosts, nome_etapa, descricao_etapa, executor_etapa, grupo_removido):
+    remover_grupo_dos_hosts(zapi, hosts, grupo_removido)
+
+    adicionar_host_controle(hosts)
+
+    hostnames = []
+    for host in hosts:
+        hostnames.append(host['name'])
+
+    hosts_controle = Host.objects(nome__in=hostnames)
+    atributo_modificado = AtributoExcluido(nome='groups', valor_anterior=grupo_removido['name'], id_atributo=grupo_removido['groupid'])
+
+    gestor_controles.criar_etapa_faseada(processo, nome_etapa, descricao_etapa, executor_etapa, hosts_controle, atributo_modificado)
+
 
 def nova_fase_adicionar_grupo(zapi, processo, hosts, nome_etapa, novo_grupo):
     adicionar_novo_grupo_aos_hosts(zapi, hosts, novo_grupo)

@@ -5,9 +5,9 @@ from flask import render_template, flash, redirect, url_for
 from pyzabbix import ZabbixAPI
 from controle.gestor_controles import criar_processo
 from controle.models.models import *
-from ferramentas.migrar_host_de_grupos import etapa_adicionar_grupo
+from ferramentas.migrar_hosts_de_grupos import etapa_adicionar_grupo, etapa_remover_grupo
 from interfaces.web import create_app
-from interfaces.web.forms import NovoProcessoForm, AdicionarGrupoHostsForm
+from interfaces.web.forms import NovoProcessoForm, AdicionarGrupoHostsForm, RemoverGrupoHostsForm
 from zabbix.base import find_hosts_by_hostnames, find_group_by_name
 
 app = create_app()
@@ -32,7 +32,8 @@ def conectar_mongoengine():
         db_password = getenv('DB_PASSWORD')
 
         connect(db=db_name, host=db_host, port=db_port, username=db_user, password=db_password)
-    connect('dev')
+    else:
+        connect('dev')
 
 
 @app.before_first_request
@@ -65,17 +66,43 @@ def nova_etapa():
 @app.route('/inclusao/etapa/adicionar_grupo_hosts', methods=['GET', 'POST'])
 def adicionar_grupo_hosts():
     form = AdicionarGrupoHostsForm()
+
     if form.validate_on_submit():
         zapi = conectar_zabbix()
         processo = Processo.objects(nome=form.nome_processo.data).first()
-        hostnames = form.hosts.data.splitlines()
-        hostnames = [x.strip() for x in hostnames]
-        hosts = find_hosts_by_hostnames(zapi, hostnames)
-
+        hosts = find_hosts_by_hostnames(zapi, converter_texto_lista_hosts(form.hosts.data))
         group = find_group_by_name(zapi, form.novo_grupo.data)
 
         etapa_adicionar_grupo(zapi, processo, hosts, form.nome.data, form.descricao.data, form.email.data, group)
+
         flash('Etapa executada com sucesso'.format(processo.nome))
+
         return redirect(url_for('adicionar_grupo_hosts'))
 
     return render_template('adicionar_grupo_hosts.html', form=form)
+
+@app.route('/inclusao/etapa/remover_grupo_hosts', methods=['GET', 'POST'])
+def remover_grupo_hosts():
+    form = RemoverGrupoHostsForm()
+
+    if form.validate_on_submit():
+        zapi = conectar_zabbix()
+        processo = Processo.objects(nome=form.nome_processo.data).first()
+        hosts = find_hosts_by_hostnames(zapi, converter_texto_lista_hosts(form.hosts.data))
+        group = find_group_by_name(zapi, form.grupo_removido.data)
+
+        etapa_remover_grupo(zapi, processo, hosts, form.nome.data, form.descricao.data, form.email.data, group)
+
+        flash('Etapa executada com sucesso'.format(processo.nome))
+
+        return redirect(url_for('remover_grupo_hosts'))
+
+    return render_template('remover_grupo_hosts.html', form=form)
+
+
+def converter_texto_lista_hosts(hostnames):
+    hostnames = hostnames.replace(',', '')
+    hostnames = hostnames.replace(';', '')
+    hostnames = hostnames.splitlines()
+    hostnames = [x.strip() for x in hostnames]
+    return hostnames
