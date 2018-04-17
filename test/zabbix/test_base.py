@@ -20,13 +20,37 @@ class BaseTestCase(TestCase):
                 return []
             return self.name_groups[filter['name']]
 
-        def host_side_effect(self, output, groupids):
-            hosts = []
+        def host_side_effect(self, output, groupids, filter=None):
+            if filter:
+                hosts = self.host_side_effect_with_filter(filter, groupids)
+            else:
+                hosts = self.host_side_effect_without_filter(groupids)
 
+            return hosts
+
+        def host_side_effect_with_filter(self, filter, groupids):
+            hosts = []
+            hostnames = filter['host']
             if type(groupids) is list:
                 for groupid in groupids:
                     if groupids in self.group_hosts:
-                        hosts.append(self.group_hosts[groupid])
+                        for host in self.group_hosts[groupid]:
+                            if host['name'] in hostnames:
+                                hosts.append(host)
+            else:
+                if groupids in self.group_hosts:
+                    for host in self.group_hosts[groupids]:
+                        if host['name'] in hostnames:
+                            hosts.append(host)
+
+            return hosts
+
+        def host_side_effect_without_filter(self, groupids):
+            hosts = []
+            if type(groupids) is list:
+                for groupid in groupids:
+                    if groupids in self.group_hosts:
+                        hosts.extend(self.group_hosts[groupid])
             else:
                 if groupids in self.group_hosts:
                     hosts.extend(self.group_hosts[groupids])
@@ -142,6 +166,19 @@ class BaseTestCase(TestCase):
         retorno = base.find_hosts_by_groupid(zapi, id_grupo)
 
         self.assertEqual([{'name': 'host-4', 'hostid': '4'}], retorno)
+
+    def test_find_hosts_by_group_e_nome(self):
+        self.scenario.add_group(groupid=1, name='grupo_1')
+        self.scenario.add_host(hostid=4, name='host-4', groups=[1])
+        self.scenario.add_host(hostid=5, name='host-5', groups=[1])
+
+        id_grupo = 1
+        zapi = self.scenario.zapi
+
+        retorno = base.find_hosts_by_groupid(zapi, id_grupo, ['host-4'])
+
+        self.assertEqual([{'name': 'host-4', 'hostid': '4'}], retorno)
+        zapi.host.get.assert_called_with(output=['hostid', 'name'], groupids=1, filter={'host': ['host-4']})
 
     def test_find_hosts_by_group_nenhum_host_no_grupo(self):
         self.scenario.add_group(groupid=1, name='grupo_1')
