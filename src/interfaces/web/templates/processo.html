@@ -1,0 +1,23 @@
+<!doctype html>
+<title>Zabbix Tools</title>
+<head>
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+</head>
+<h1>Lista de Processos</h1>
+<table>
+    <thead>
+        <TR>
+            <TD>Data</TD>
+            <TD>Nome</TD>
+            <TD>Descrição</TD>
+        </TR>
+    </thead>
+    {% for processo in processos %}
+        <TR>
+            <TD>{{ moment(processo.data_inicio).format('DD/MM/YYYY hh:mm:ss') }}</TD>
+            <TD>{{ processo.nome }}</TD>
+            <TD>{{ processo.descricao }}</TD>
+        </TR>
+    {% endfor %}
+</table>

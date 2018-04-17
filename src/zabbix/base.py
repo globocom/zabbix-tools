@@ -26,5 +26,5 @@ def mass_add_groups(zapi, groups, hosts):
     zapi.hostgroup.massadd(groups=groups, hosts=hosts)
 
 
-def mass_remove_groups(zapi, groups, hosts):
-    zapi.hostgroup.massremove(groupids=groups, hostids=hosts)
+def mass_remove_groups(zapi, groupids, hostids):
+    zapi.hostgroup.massremove(groupids=groupids, hostids=hostids)
