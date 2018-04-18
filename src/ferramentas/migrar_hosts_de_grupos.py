@@ -39,6 +39,7 @@ def nova_fase_adicionar_grupo(zapi, processo, etapa_faseada, executor, hosts):
     for host in hosts:
         hostnames.append(host['name'])
 
+    adicionar_host_controle(hosts)
     hosts_controle = Host.objects(nome__in=hostnames)
 
     nome_novo_grupo = etapa_faseada.atributo_modificado.valor
