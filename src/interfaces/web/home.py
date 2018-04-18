@@ -37,7 +37,7 @@ def novo_processo():
 
         processo = criar_processo(nome=nome, descricao=descricao, autor=autor)
 
-        flash('Processo {} criado com sucesso'.format(processo.nome))
+        flash(u'Processo {} criado com sucesso'.format(processo.nome))
 
         return redirect(url_for('novo_processo'))
 
