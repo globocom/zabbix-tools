@@ -14,9 +14,7 @@
             <TD>Nome</TD>
             <TD>Descrição</TD>
             <TD>Executor</TD>
-            {% if etapa._cls == 'EtapaFaseada' %}}
             <TD> - </TD>
-            {% endif %}}
         </TR>
     </thead>
     {% for etapa in etapas %}
@@ -25,9 +23,11 @@
             <TD> <a href="/processo/etapas/{{ processo.nome }}/{{ etapa.nome }}/detalhes"> {{ etapa.nome }} </a></TD>
             <TD>{{ etapa.descricao }}</TD>
             <TD>{{ etapa.executor }}</TD>
-            {% if etapa._cls == 'EtapaFaseada' %}}
+            {% if etapa._cls == 'EtapaFaseada' %}
                 <TD><a href="/inclusao/{{ processo.nome }}/{{ etapa.nome }}/fase">nova fase</a> </TD>
-            {% endif %}}
+            {% else %}
+            <span> - </span>
+            {% endif %}
         </TR>
     {% endfor %}
 </table>
