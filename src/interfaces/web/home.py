@@ -57,7 +57,15 @@ def adicionar_grupo_hosts(nome_processo):
     if form.validate_on_submit():
         zapi = conectar_zabbix()
         processo = Processo.objects(nome=nome_processo).first()
-        hosts = find_hosts_by_hostnames(zapi, converter_texto_lista_hosts(form.hosts.data))
+
+        lista_hosts = converter_texto_lista_hosts(form.hosts.data)
+
+        hosts = find_hosts_by_hostnames(zapi, lista_hosts)
+
+        hostanames = [h['name'] for h in hosts]
+
+        ignorados = set(lista_hosts).symmetric_difference(set(hostanames))
+
         group = find_group_by_name(zapi, form.novo_grupo.data)
 
         nome_etapa = form.nome.data
@@ -68,9 +76,9 @@ def adicionar_grupo_hosts(nome_processo):
         etapa_adicionar_grupo(zapi=zapi, processo=processo, hosts=hosts, nome_etapa=nome_etapa,
                               descricao_etapa=descricao, executor_etapa=executor_etapa, novo_grupo=novo_grupo)
 
-        flash(u'Etapa {} executada com sucesso'.format(nome_etapa))
+        flash(u'Etapa {} executada com sucesso. Ignorados: {}'.format(nome_etapa, repr(ignorados)))
 
-        return redirect(url_for('adicionar_grupo_hosts'))
+        return redirect(url_for('adicionar_grupo_hosts', nome_processo=nome_processo))
 
     return render_template('etapa_adicionar_grupo_hosts.html', form=form)
 
@@ -95,7 +103,7 @@ def remover_grupo_hosts(nome_processo):
 
         flash(u'Etapa {} executada com sucesso'.format(nome_etapa))
 
-        return redirect(url_for('remover_grupo_hosts'))
+        return redirect(url_for('remover_grupo_hosts', nome_processo=nome_processo))
 
     return render_template('etapa_remover_grupo_hosts.html', form=form)
 
@@ -131,7 +139,13 @@ def nova_fase(nome_processo, nome_etapa):
 
         nome_etapa = nome_etapa
 
-        hosts = find_hosts_by_hostnames(zapi, converter_texto_lista_hosts(form.hosts.data))
+        lista_hosts = converter_texto_lista_hosts(form.hosts.data)
+
+        hosts = find_hosts_by_hostnames(zapi, lista_hosts)
+
+        hostanames = [h['name'] for h in hosts]
+
+        ignorados = set(lista_hosts).symmetric_difference(set(hostanames))
 
         executor = form.email.data
 
@@ -148,9 +162,9 @@ def nova_fase(nome_processo, nome_etapa):
             nova_fase_remover_grupo(zapi=zapi, processo=processo, executor=executor, hosts=hosts,
                                       etapa_faseada=etapa_faseada)
 
-        flash(u'Fase executada com sucesso')
+        flash(u'Fase executada com sucesso, {} ignorados'.format(repr(ignorados)))
 
-        return redirect(url_for('nova_fase'))
+        return redirect(url_for('nova_fase', nome_processo=nome_processo, nome_etapa=nome_etapa))
 
     return render_template('nova_fase.html', form=form)
 
@@ -162,6 +176,6 @@ def grupo_autocomplete():
 
 def converter_texto_lista_hosts(hostnames):
     hostnames = hostnames.replace(',', '\n')
-    hostnames = hostnames.splitlines()
+    hostnames = hostnames.split('\n')
     hostnames = [x.strip() for x in hostnames]
     return hostnames
