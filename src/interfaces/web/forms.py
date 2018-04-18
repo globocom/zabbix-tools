@@ -1,10 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import FlaskForm
-from mongoengine import connect
 from wtforms import *
 from wtforms.validators import DataRequired, Email
-
-from controle.models.models import Processo
 
 
 class NovoProcessoForm(FlaskForm):
@@ -21,6 +18,15 @@ class AdicionarGrupoHostsForm(FlaskForm):
     email = StringField('Email', validators=[DataRequired(), Email()])
 
     novo_grupo = StringField('Nome novo grupo', validators=[DataRequired()])
+    hosts = TextAreaField(validators=[DataRequired()])
+
+    salvar = SubmitField('Salvar')
+
+
+class NovaFaseForm(FlaskForm):
+    nome_processo = StringField('Processo', validators=[DataRequired()])
+    nome_etapa = StringField('Etapa', validators=[DataRequired()])
+    email = StringField('Email', validators=[DataRequired(), Email()])
     hosts = TextAreaField(validators=[DataRequired()])
 
     salvar = SubmitField('Salvar')

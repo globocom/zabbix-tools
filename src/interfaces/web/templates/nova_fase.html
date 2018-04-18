@@ -1,0 +1,36 @@
+<!doctype html>
+<title>Zabbix Tools</title>
+<head>
+</head>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block content %}
+    <h1>Nova Fase</h1>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.nome_processo.label }}<br>
+            {{ form.nome_processo }}
+        </p>
+        <p>
+            {{ form.nome_etapa.label }}<br>
+            {{ form.nome_etapa }}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email }}
+        </p>
+        <p>
+            {{ form.hosts.label }}<br>
+            {{ form.hosts }}
+        </p>
+        <p>{{ form.salvar() }}</p>
+    </form>
+{% endblock %}
