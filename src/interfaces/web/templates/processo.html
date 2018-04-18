@@ -11,6 +11,7 @@
             <TD>Data</TD>
             <TD>Nome</TD>
             <TD>Descrição</TD>
+            <TD> - </TD>
         </TR>
     </thead>
     {% for processo in processos %}
@@ -18,6 +19,7 @@
             <TD>{{ moment(processo.data_inicio).format('DD/MM/YYYY hh:mm:ss') }}</TD>
             <TD>{{ processo.nome }}</TD>
             <TD>{{ processo.descricao }}</TD>
+            <TD><a href="/processo/etapas/{{processo.nome}}">etapas</a> </TD>
         </TR>
     {% endfor %}
 </table>

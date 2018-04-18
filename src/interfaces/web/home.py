@@ -40,6 +40,7 @@ def conectar_mongoengine():
 def setup():
     conectar_mongoengine()
 
+
 @app.route('/')
 def home():
     return render_template('home.html')
@@ -48,6 +49,7 @@ def home():
 def processo():
     processos = Processo.objects.all()
     return render_template('processo.html', processos=processos)
+
 
 @app.route('/inclusao/processo', methods=['GET', 'POST'])
 def novo_processo():
@@ -58,10 +60,12 @@ def novo_processo():
         return redirect(url_for('novo_processo'))
     return render_template('novo_processo.html', form=form)
 
+
 @app.route('/inclusao/etapa')
 def nova_etapa():
     operacoes = ('adicionar_grupo_hosts', 'remover_grupo_hosts')
     return render_template('nova_etapa.html', operacoes=operacoes)
+
 
 @app.route('/inclusao/etapa/adicionar_grupo_hosts', methods=['GET', 'POST'])
 def adicionar_grupo_hosts():
@@ -81,6 +85,7 @@ def adicionar_grupo_hosts():
 
     return render_template('adicionar_grupo_hosts.html', form=form)
 
+
 @app.route('/inclusao/etapa/remover_grupo_hosts', methods=['GET', 'POST'])
 def remover_grupo_hosts():
     form = RemoverGrupoHostsForm()
@@ -98,6 +103,25 @@ def remover_grupo_hosts():
         return redirect(url_for('remover_grupo_hosts'))
 
     return render_template('remover_grupo_hosts.html', form=form)
+
+
+@app.route('/processo/etapas/<nome_processo>')
+def etapas(nome_processo):
+    processo = Processo.objects(nome = nome_processo).first()
+    return render_template('etapas.html', processo=processo, etapas=processo.etapas)
+
+
+@app.route('/processo/etapas/<nome_processo>/<nome_etapa>/detalhes')
+def detalhe_etapa(nome_processo, nome_etapa):
+    processo = Processo.objects(nome=nome_processo).first()
+
+    etapa = None
+    for etapa in processo.etapas:
+        if etapa.nome == nome_etapa:
+            etapa = etapa
+            break
+
+    return render_template('detalhe_etapa.html', etapa=etapa)
 
 
 def converter_texto_lista_hosts(hostnames):
