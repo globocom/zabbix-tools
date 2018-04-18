@@ -78,3 +78,5 @@ class Processo(Document):
     nome = StringField(required=True, unique=True)
     descricao = StringField(required=True)
     etapas = EmbeddedDocumentListField(Etapa)
+
+    meta = {'ordering': ['-data_inicio']}

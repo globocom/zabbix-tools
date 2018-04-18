@@ -14,6 +14,7 @@
             <TD>Nome</TD>
             <TD>Descrição</TD>
             <TD> - </TD>
+            <TD> - </TD>
         </TR>
     </thead>
     {% for processo in processos %}
@@ -22,6 +23,7 @@
             <TD>{{ processo.nome }}</TD>
             <TD>{{ processo.descricao }}</TD>
             <TD><a href="/processo/etapas/{{processo.nome}}">etapas</a> </TD>
+            <TD><a href="/inclusao/{{processo.nome}}/etapa">nova etapa</a> </TD>
         </TR>
     {% endfor %}
 </table>

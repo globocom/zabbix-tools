@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from flask import render_template, flash, redirect, url_for
+from flask import render_template, flash, redirect, url_for, Response, json
 from controle.gestor_controles import criar_processo
 from controle.models.models import *
 from ferramentas.migrar_hosts_de_grupos import etapa_adicionar_grupo, etapa_remover_grupo, nova_fase_adicionar_grupo, \
@@ -44,19 +44,19 @@ def novo_processo():
     return render_template('novo_processo.html', form=form)
 
 
-@app.route('/inclusao/etapa')
-def nova_etapa():
+@app.route('/inclusao/<nome_processo>/etapa')
+def nova_etapa(nome_processo):
     operacoes = ('adicionar_grupo_hosts', 'remover_grupo_hosts')
-    return render_template('nova_etapa.html', operacoes=operacoes)
+    return render_template('nova_etapa.html', nome_processo=nome_processo, operacoes=operacoes)
 
 
-@app.route('/inclusao/etapa/adicionar_grupo_hosts', methods=['GET', 'POST'])
-def adicionar_grupo_hosts():
+@app.route('/inclusao/<nome_processo>/etapa/adicionar_grupo_hosts', methods=['GET', 'POST'])
+def adicionar_grupo_hosts(nome_processo):
     form = AdicionarGrupoHostsForm()
 
     if form.validate_on_submit():
         zapi = conectar_zabbix()
-        processo = Processo.objects(nome=form.nome_processo.data).first()
+        processo = Processo.objects(nome=nome_processo).first()
         hosts = find_hosts_by_hostnames(zapi, converter_texto_lista_hosts(form.hosts.data))
         group = find_group_by_name(zapi, form.novo_grupo.data)
 
@@ -75,13 +75,13 @@ def adicionar_grupo_hosts():
     return render_template('etapa_adicionar_grupo_hosts.html', form=form)
 
 
-@app.route('/inclusao/etapa/remover_grupo_hosts', methods=['GET', 'POST'])
-def remover_grupo_hosts():
+@app.route('/inclusao/<nome_processo>/etapa/remover_grupo_hosts', methods=['GET', 'POST'])
+def remover_grupo_hosts(nome_processo):
     form = RemoverGrupoHostsForm()
 
     if form.validate_on_submit():
         zapi = conectar_zabbix()
-        processo = Processo.objects(nome=form.nome_processo.data).first()
+        processo = Processo.objects(nome=nome_processo).first()
         hosts = find_hosts_by_hostnames(zapi, converter_texto_lista_hosts(form.hosts.data))
         group = find_group_by_name(zapi, form.grupo_removido.data)
 
@@ -121,15 +121,15 @@ def detalhe_etapa(nome_processo, nome_etapa):
     return render_template('detalhe_etapa.html', etapa=etapa)
 
 
-@app.route('/inclusao/fase', methods=['GET', 'POST'])
-def nova_fase():
+@app.route('/inclusao/<nome_processo>/<nome_etapa>/fase', methods=['GET', 'POST'])
+def nova_fase(nome_processo, nome_etapa):
     form = NovaFaseForm()
 
     if form.validate_on_submit():
         zapi = conectar_zabbix()
-        processo = Processo.objects(nome=form.nome_processo.data).first()
+        processo = Processo.objects(nome=nome_processo).first()
 
-        nome_etapa = form.nome_etapa.data
+        nome_etapa = nome_etapa
 
         hosts = find_hosts_by_hostnames(zapi, converter_texto_lista_hosts(form.hosts.data))
 
@@ -154,6 +154,11 @@ def nova_fase():
 
     return render_template('nova_fase.html', form=form)
 
+
+@app.route('/_grupo_autocomplete', methods=['GET'])
+def grupo_autocomplete():
+    grupos = [g['name'] for g in conectar_zabbix().hostgroup.get()]
+    return Response(json.dumps(grupos), mimetype='application/json')
 
 def converter_texto_lista_hosts(hostnames):
     hostnames = hostnames.replace(',', '\n')
