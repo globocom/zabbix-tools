@@ -68,7 +68,7 @@ def adicionar_grupo_hosts():
         etapa_adicionar_grupo(zapi=zapi, processo=processo, hosts=hosts, nome_etapa=nome_etapa,
                               descricao_etapa=descricao, executor_etapa=executor_etapa, novo_grupo=novo_grupo)
 
-        flash('Etapa executada com sucesso'.format(processo.nome))
+        flash(u'Etapa {} executada com sucesso'.format(nome_etapa))
 
         return redirect(url_for('adicionar_grupo_hosts'))
 
@@ -93,7 +93,7 @@ def remover_grupo_hosts():
         etapa_remover_grupo(zapi=zapi, processo=processo, hosts=hosts, nome_etapa=nome_etapa, descricao_etapa=descricao,
                             executor_etapa=executor, grupo_removido=grupo_removido)
 
-        flash('Etapa executada com sucesso'.format(processo.nome))
+        flash(u'Etapa {} executada com sucesso'.format(nome_etapa))
 
         return redirect(url_for('remover_grupo_hosts'))
 
@@ -148,7 +148,7 @@ def nova_fase():
             nova_fase_remover_grupo(zapi=zapi, processo=processo, executor=executor, hosts=hosts,
                                       etapa_faseada=etapa_faseada)
 
-        flash('Fase executada com sucesso'.format(processo.nome))
+        flash(u'Fase executada com sucesso')
 
         return redirect(url_for('nova_fase'))
 
