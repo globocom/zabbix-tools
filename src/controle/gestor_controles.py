@@ -27,13 +27,13 @@ def criar_etapa_simples(processo, nome, descricao, executor, objetos_afetados, a
 
 def criar_etapa_faseada(processo, nome, descricao, executor, objetos_afetados, atributo_modificado=None):
     etapa_faseada = EtapaFaseada(nome=nome, descricao=descricao, executor=executor, atributo_modificado=atributo_modificado)
-    fase = Fase(objetos_afetados=objetos_afetados)
+    fase = Fase(objetos_afetados=objetos_afetados, executor=executor)
     etapa_faseada.fases.append(fase)
     processo.etapas.append(etapa_faseada)
     processo.save()
 
-def adicionar_fase(processo, etapa_faseada, objetos_afetados):
-    fase = Fase(objetos_afetados=objetos_afetados)
+def adicionar_fase(processo, etapa_faseada, executor, objetos_afetados):
+    fase = Fase(executor=executor, objetos_afetados=objetos_afetados)
     etapa_faseada.fases.append(fase)
     processo.save()
 

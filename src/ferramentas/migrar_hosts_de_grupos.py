@@ -33,7 +33,7 @@ def etapa_remover_grupo(zapi, processo, hosts, nome_etapa, descricao_etapa, exec
     gestor_controles.criar_etapa_faseada(processo, nome_etapa, descricao_etapa, executor_etapa, hosts_controle, atributo_modificado)
 
 
-def nova_fase_adicionar_grupo(zapi, processo, hosts, nome_etapa, novo_grupo):
+def nova_fase_adicionar_grupo(zapi, processo, executor, hosts, nome_etapa, novo_grupo):
     adicionar_novo_grupo_aos_hosts(zapi, hosts, novo_grupo)
 
     hostnames = []
@@ -48,7 +48,7 @@ def nova_fase_adicionar_grupo(zapi, processo, hosts, nome_etapa, novo_grupo):
             etapa_faseada = etapa
             break
 
-    gestor_controles.adicionar_fase(processo, etapa_faseada, objetos_afetados=hosts_controle)
+    gestor_controles.adicionar_fase(processo, etapa_faseada, executor=executor, objetos_afetados=hosts_controle)
 
 
 def adicionar_novo_grupo_aos_hosts(zapi, hosts, novo_grupo):

@@ -55,7 +55,7 @@ class EtapaSimples(Etapa):
 class Fase(EmbeddedDocument):
     objetos_afetados = ListField(ReferenceField(Objeto), required=True)
     data_execucao = DateTimeField(default=datetime.datetime.now())
-
+    executor = StringField(required=True)
 
 class EtapaFaseada(Etapa):
     fases = EmbeddedDocumentListField(Fase)
