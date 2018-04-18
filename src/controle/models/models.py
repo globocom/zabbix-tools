@@ -4,7 +4,7 @@ from mongoengine import *
 
 
 class AtributoModificado(EmbeddedDocument):
-    nome = StringField(required=True)
+    nome = StringField(required=True, choices=('groups'))
 
     meta = {'allow_inheritance': True}
 
@@ -55,7 +55,7 @@ class EtapaSimples(Etapa):
 class Fase(EmbeddedDocument):
     objetos_afetados = ListField(ReferenceField(Objeto), required=True)
     data_execucao = DateTimeField(default=datetime.datetime.now())
-
+    executor = StringField(required=True)
 
 class EtapaFaseada(Etapa):
     fases = EmbeddedDocumentListField(Fase)
@@ -78,3 +78,5 @@ class Processo(Document):
     nome = StringField(required=True, unique=True)
     descricao = StringField(required=True)
     etapas = EmbeddedDocumentListField(Etapa)
+
+    meta = {'ordering': ['-data_inicio']}

@@ -1,0 +1,46 @@
+<!doctype html>
+<title>Zabbix Tools</title>
+<head>
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+</head>
+<h1><a href="/" style="color: black; text-decoration: none;">Zabbix Tools</a></h1>
+<br><br>
+<h2>Detalhes da etapa: {{etapa.nome}}</h2>
+
+<li>Data: {{ moment(etapa.data_execucao).format('DD/MM/YYYY hh:mm:ss') }}</li>
+<li>Nome: {{ etapa.nome }}</li>
+<li>Descrição: {{ etapa.descricao }}</li>
+
+<br>
+
+<li>Atributo modificado: {{ etapa.atributo_modificado.nome }}</li>
+
+{% if etapa.atributo_modificado._cls == 'AtributoIncluido' %}
+    <li>Tipo: inclusão</li>
+    <li>Valor: {{ etapa.atributo_modificado.valor }}</li>
+    <li>Id: {{ etapa.atributo_modificado.id_atributo }}</li>
+{% elif etapa.atributo_modificado._cls == 'AtributoExcluido' %}
+    <li>Tipo: remoção</li>
+    <li>Nome objeto Removido: {{ etapa.atributo_modificado.valor_anterior }}</li>
+    <li>Id objeto Removido: {{ etapa.atributo_modificado.id_atributo }}</li>
+{% elif etapa.atributo_modificado._cls == 'AtributoAtualizado' %}
+    <li>Tipo: atualização</li>
+    <li>Valor Anterior: {{ etapa.atributo_modificado.valor_anterior }}</li>
+    <li>Id (anterior): {{ etapa.atributo_modificado.id_atributo_anterior }}</li>
+    <li>Novo Valor: {{ etapa.atributo_modificado.novo_valor }}</li>
+    <li>Id (novo): {{ etapa.atributo_modificado.id_novo_atributo }}</li>
+{%endif %}
+
+<br><br>
+
+<h2>Objetos afetados:</h2>
+
+<br>
+
+{% for oa in  etapa.objetos_afetados %}
+    {{oa.nome}},
+{% endfor %}
+
+
+

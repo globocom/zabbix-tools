@@ -1,38 +1,40 @@
 # -*- coding: utf-8 -*-
 from flask_wtf import FlaskForm
-from mongoengine import connect
 from wtforms import *
 from wtforms.validators import DataRequired, Email
 
-from controle.models.models import Processo
-
 
 class NovoProcessoForm(FlaskForm):
-    nome = StringField('Nome', validators=[DataRequired()])
-    descricao = StringField('Descricao', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
-    salvar = SubmitField('Salvar')
+    nome = StringField(u'Nome', validators=[DataRequired()])
+    descricao = StringField(u'Descrição', validators=[DataRequired()])
+    email = StringField(u'Email', validators=[DataRequired(), Email()])
+    salvar = SubmitField(u'Salvar')
 
 
 class AdicionarGrupoHostsForm(FlaskForm):
-    nome_processo = StringField('Processo', validators=[DataRequired()])
-    nome = StringField('Nome', validators=[DataRequired()])
-    descricao = StringField('Descricao', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    nome = StringField(u'Nome', validators=[DataRequired()])
+    descricao = StringField(u'Descrição', validators=[DataRequired()])
+    email = StringField(u'Email', validators=[DataRequired(), Email()])
 
-    novo_grupo = StringField('Nome novo grupo', validators=[DataRequired()])
+    novo_grupo = StringField(u'Nome novo grupo', validators=[DataRequired()], id='novo_grupo_autocomplete')
     hosts = TextAreaField(validators=[DataRequired()])
 
-    salvar = SubmitField('Salvar')
+    salvar = SubmitField(u'Salvar')
+
+
+class NovaFaseForm(FlaskForm):
+    email = StringField(u'Email', validators=[DataRequired(), Email()])
+    hosts = TextAreaField(validators=[DataRequired()])
+
+    salvar = SubmitField(u'Salvar')
 
 
 class RemoverGrupoHostsForm(FlaskForm):
-    nome_processo = StringField('Processo', validators=[DataRequired()])
-    nome = StringField('Nome', validators=[DataRequired()])
-    descricao = StringField('Descricao', validators=[DataRequired()])
-    email = StringField('Email', validators=[DataRequired(), Email()])
+    nome = StringField(u'Nome', validators=[DataRequired()])
+    descricao = StringField(u'Descrição', validators=[DataRequired()])
+    email = StringField(u'Email', validators=[DataRequired(), Email()])
 
-    grupo_removido = StringField('Nome do grupo a remover', validators=[DataRequired()])
+    grupo_removido = StringField('Nome do grupo a remover', validators=[DataRequired()], id='grupo_removido_autocomplete')
     hosts = TextAreaField(validators=[DataRequired()])
 
-    salvar = SubmitField('Salvar')
+    salvar = SubmitField(u'Salvar')

@@ -1,0 +1,33 @@
+<!doctype html>
+<title>Zabbix Tools</title>
+<head>
+    {{ moment.include_jquery() }}
+    {{ moment.include_moment() }}
+</head>
+<h1><a href="/" style="color: black; text-decoration: none;">Zabbix Tools</a></h1>
+<br><br>
+<h2>Etapas do processo: {{processo.nome}}</h2>
+<table>
+    <thead>
+        <TR>
+            <TD>Data</TD>
+            <TD>Nome</TD>
+            <TD>Descrição</TD>
+            <TD>Executor</TD>
+            <TD> - </TD>
+        </TR>
+    </thead>
+    {% for etapa in etapas %}
+        <TR>
+            <TD>{{ moment(etapa.data_execucao).format('DD/MM/YYYY hh:mm:ss') }}</TD>
+            <TD> <a href="/processo/etapas/{{ processo.nome }}/{{ etapa.nome }}/detalhes"> {{ etapa.nome }} </a></TD>
+            <TD>{{ etapa.descricao }}</TD>
+            <TD>{{ etapa.executor }}</TD>
+            {% if etapa._cls == 'EtapaFaseada' %}
+                <TD><a href="/inclusao/{{ processo.nome }}/{{ etapa.nome }}/fase">nova fase</a> </TD>
+            {% else %}
+            <span> - </span>
+            {% endif %}
+        </TR>
+    {% endfor %}
+</table>

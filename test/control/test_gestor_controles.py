@@ -116,7 +116,7 @@ class OpControlTestCase(TestCase):
 
         processo = Processo.objects.first()
         etapa_faseada = processo.etapas.first()
-        gestor_controles.adicionar_fase(processo, etapa_faseada, objetos_afetados_etapa_2)
+        gestor_controles.adicionar_fase(processo, etapa_faseada, executor, objetos_afetados_etapa_2)
 
         processo_db = Processo.objects.first()
         self.assertEqual(1, processo_db.etapas.count())

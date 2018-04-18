@@ -1,0 +1,59 @@
+<!doctype html>
+<title>Zabbix Tools</title>
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
+</head>
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <ul class=flashes>
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+{% endwith %}
+{% block content %}
+    <h1><a href="/" style="color: black; text-decoration: none;">Zabbix Tools</a></h1>
+    <br><br>
+    <h2>Criar etapa para operação: remover_grupo_hosts</h2>
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <p>
+            {{ form.nome.label }}<br>
+            {{ form.nome }}
+        </p>
+        <p>
+            {{ form.descricao.label }}<br>
+            {{ form.descricao }}
+        </p>
+        <p>
+            {{ form.email.label }}<br>
+            {{ form.email }}
+        </p>
+        <p>
+            {{ form.grupo_removido.label }}<br>
+            {{ form.grupo_removido }}
+        </p>
+        <p>
+            {{ form.hosts.label }}<br>
+            {{ form.hosts }}
+        </p>
+        <p>{{ form.salvar() }}</p>
+    </form>
+{% endblock %}
+
+<script>
+    $(function() {
+        $.ajax({
+            url: '{{ url_for("grupo_autocomplete") }}'
+            }).done(function (data){
+                $('#grupo_removido_autocomplete').autocomplete({
+                    source: data,
+                    minLength: 3
+                });
+            });
+        });
+</script>
