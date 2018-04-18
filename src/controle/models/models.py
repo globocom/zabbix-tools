@@ -4,7 +4,7 @@ from mongoengine import *
 
 
 class AtributoModificado(EmbeddedDocument):
-    nome = StringField(required=True)
+    nome = StringField(required=True, choices=('groups'))
 
     meta = {'allow_inheritance': True}
 
