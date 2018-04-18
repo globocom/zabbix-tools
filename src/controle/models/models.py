@@ -34,11 +34,16 @@ class Objeto(Document):
 
 
 class Etapa(EmbeddedDocument):
+    TIPOS_OPERACAO = ('ADICIONAR_GRUPO_HOSTS', 'REMOVER_GRUPO_HOSTS')
+
+
     executor = StringField(required=True)
     data_execucao = DateTimeField(default=datetime.datetime.now())
     nome = StringField(required=True)
     descricao = StringField(required=True)
     atributo_modificado = EmbeddedDocumentField(AtributoModificado)
+    executado = BooleanField(default=False)
+    operacao = StringField(choices=TIPOS_OPERACAO)
 
     meta = {'ordering': ['data_execucao'], 'allow_inheritance': True}
 
