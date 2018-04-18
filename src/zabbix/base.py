@@ -17,7 +17,7 @@ def find_hosts_by_groupid(zapi, groupids, hostnames=None):
 
 
 def find_hosts_by_hostnames(zapi, hostnames):
-    hosts = zapi.host.get(output=['hostid', 'name'], filter={'name': hostnames})
+    hosts = zapi.host.get(output=['hostid', 'name'], filter={'name': hostnames}, status=0)
 
     return hosts
 
