@@ -1,0 +1,24 @@
+version: '3'
+services:
+  zabbix-db:
+    image: monitoringartist/zabbix-db-mariadb
+    environment:
+      - MARIADB_USER=zabbix
+      - MARIADB_PASS=my_password
+  zabbix:
+    image: monitoringartist/dockbix-xxl:latest
+    environment:
+      - ZS_DBHost=dockbix.db
+      - ZS_DBUser=zabbix
+      - ZS_DBPassword=my_password
+      - XXL_zapix=true
+      - XXL_grapher=true
+    ports:
+      - 80:80
+      - 10051:10051
+    links:
+      - zabbix-db:dockbix.db
+  db:
+    image: mongo
+    ports:
+      - 27017:27017
