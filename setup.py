@@ -16,5 +16,3 @@ setup(
     packages=find_packages(),
     include_package_data=True,
 )
-
-dependency_links=['https://artifactory.globoi.com/artifactory/api/pypi/pypi-all/simple/']
