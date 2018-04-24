@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding=utf8
 from controle.gestor_controles import criar_processo
 from controle.models.models import *
 from ferramentas.migrar_hosts_de_grupos import etapa_adicionar_grupo, etapa_remover_grupo, nova_fase_adicionar_grupo, \
@@ -37,7 +37,11 @@ def novo_processo():
         descricao = form.descricao.data
         autor = form.email.data
 
-        processo = criar_processo(nome=nome, descricao=descricao, autor=autor)
+        try:
+            processo = criar_processo(nome=nome, descricao=descricao, autor=autor)
+        except NotUniqueError:
+            flash(u'Erro: já existe um processo com nome {}'.format(nome))
+            return redirect(url_for('novo_processo'))
 
         flash(u'Processo {} criado com sucesso'.format(processo.nome))
 

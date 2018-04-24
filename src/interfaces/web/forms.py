@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+# encoding=utf8
 from flask_wtf import FlaskForm
 from wtforms import *
 from wtforms.validators import DataRequired, Email
