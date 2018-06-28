@@ -5,47 +5,83 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.10.4/themes/smoothness/jquery-ui.css">
     <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static',   filename='css/bootstrap.css') }}">
+    <link rel="icon" href="{{ url_for('static',     filename='img/favicon_logo.png') }}">
+    <script src="{{ url_for('static',   filename='js/jquery-3.3.1.min.js') }}"></script>
 </head>
-{% with messages = get_flashed_messages() %}
-  {% if messages %}
-    <ul class=flashes>
-    {% for message in messages %}
-      <li>{{ message }}</li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-{% endwith %}
-{% block content %}
-    <h1><a href="/" style="color: black; text-decoration: none;">Zabbix Tools</a></h1>
-    <br><br>
-    <h2>Criar etapa para operação: adicionar_grupo_hosts</h2>
-    <form action="" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.nome.label }}<br>
-            {{ form.nome }}
-        </p>
-        <p>
-            {{ form.descricao.label }}<br>
-            {{ form.descricao }}
-        </p>
-        <p>
-            {{ form.email.label }}<br>
-            {{ form.email }}
-        </p>
-        <p>
-            {{ form.novo_grupo.label }}<br>
-            {{ form.novo_grupo }}
-        </p>
-        <p>
-            {{ form.hosts.label }}<br>
-            {{ form.hosts }}
-        </p>
-        <p>{{ form.salvar() }}</p>
-    </form>
-{% endblock %}
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <img onclick="location.href='/';" src="{{ url_for('static',  filename='img/logo.svg') }}" width="20%" height="10%">
+        <div style="margin-left: 2%;" class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/processo">Processos <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/inclusao/processo">Novo Processo</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+</header>
+<body>
+    <h4 class="navbar" style="color: rgba(0, 0, 0, 0.5);padding-left: 1.4em;padding-bottom: 0;">Criar etapa para operação: Adicionar grupo aos hosts</h4><hr/>
+    <div class="container">
+        {% with messages = get_flashed_messages() %}
+          {% if messages %}
+            <div class="flashes alert alert-primary" role="alert">
+            {% for message in messages %}
+              {{ message }}
+            {% endfor %}
+            </div>
+          {% endif %}
+        {% endwith %}
+        {% block content %}
+        <div class="form-group">
+            <form action="" method="post" class="form-control">
+                {{ form.hidden_tag() }}
+                <p>
+                    {{ form.nome.label }}<br>
+                    {{ form.nome }}
+                </p>
+                <p>
+                    {{ form.descricao.label }}<br>
+                    {{ form.descricao }}
+                </p>
+                <p>
+                    {{ form.email.label }}<br>
+                    {{ form.email }}
+                </p>
+                <p>
+                    {{ form.novo_grupo.label }}<br>
+                    {{ form.novo_grupo }}
+                </p>
+                <p>
+                    {{ form.hosts.label }}<br>
+                    {{ form.hosts }}
+                </p>
+                <p>{{ form.salvar() }}</p>
+            </form>
+        </div>
+        {% endblock %}
+    </div>
+</body>
+<footer class="text-center" style="position: inherit;">
+    <img src="{{ url_for('static',  filename='img/favicon.svg') }}" width="3%" height="3%">
+    <script type="text/javascript">
 
-<script>
+    copyright=new Date();
+
+    update=copyright.getFullYear();
+
+    document.write("Zabbix Tools © " + update);
+
+    </script>
+    <a class="grey link-alt" target="_blank" href="http://www.globo.com/">
+        Globo.com
+    </a>
+</footer>
+<script type="text/javascript">
     $(function() {
         $.ajax({
             url: '{{ url_for("grupo_autocomplete") }}'
@@ -56,4 +92,8 @@
                 });
             });
         });
+    
+    $('.form-group input[type=text]').addClass('form-control')
+    $('.form-group input[type=submit]').addClass('btn btn-primary')
+    $('.form-group textarea').addClass('form-control')
 </script>

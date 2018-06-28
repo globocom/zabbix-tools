@@ -3,31 +3,70 @@
 <head>
     {{ moment.include_jquery() }}
     {{ moment.include_moment() }}
+    <link rel="stylesheet" href="{{ url_for('static',   filename='css/bootstrap.css') }}">
+    <link rel="icon" href="{{ url_for('static',     filename='img/favicon_logo.png') }}">
+    <script src="{{ url_for('static',   filename='js/jquery-3.3.1.min.js') }}"></script>
 </head>
-<h1><a href="/" style="color: black; text-decoration: none;">Zabbix Tools</a></h1>
-<br><br>
-<h2>Etapas do processo: {{processo.nome}}</h2>
-<table>
-    <thead>
-        <TR>
-            <TD>Data</TD>
-            <TD>Nome</TD>
-            <TD>Descrição</TD>
-            <TD>Executor</TD>
-            <TD> - </TD>
-        </TR>
-    </thead>
-    {% for etapa in etapas %}
-        <TR>
-            <TD>{{ moment(etapa.data_execucao).format('DD/MM/YYYY hh:mm:ss') }}</TD>
-            <TD> <a href="/processo/etapas/{{ processo.nome }}/{{ etapa.nome }}/detalhes"> {{ etapa.nome }} </a></TD>
-            <TD>{{ etapa.descricao }}</TD>
-            <TD>{{ etapa.executor }}</TD>
-            {% if etapa._cls == 'EtapaFaseada' %}
-                <TD><a href="/inclusao/{{ processo.nome }}/{{ etapa.nome }}/fase">nova fase</a> </TD>
-            {% else %}
-            <span> - </span>
-            {% endif %}
-        </TR>
-    {% endfor %}
-</table>
+<header>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <img onclick="location.href='/';" src="{{ url_for('static',  filename='img/logo.svg') }}" width="20%" height="10%">
+        <div style="margin-left: 2%;" class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="/processo">Processos <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/inclusao/processo">Novo Processo</a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+</header>
+<body>
+    <h4 class="navbar" style="color: rgba(0, 0, 0, 0.5);padding-left: 1.4em;padding-bottom: 0;justify-content: unset;">Etapas do processo: <b>{{processo.nome}}</b></h4><hr/>
+    <div class="container form-control">
+        <table class="table table-bordered table-striped bg-light">
+            <thead>
+                <TR>
+                    <TD><b>Data</b></TD>
+                    <TD><b>Nome</b></TD>
+                    <TD><b>Descrição</b></TD>
+                    <TD><b>Executor</b></TD>
+                    <TD></TD>
+                </TR>
+            </thead>
+            {% for etapa in etapas %}
+                <TR>
+                    <TD>{{ moment(etapa.data_execucao).format('DD/MM/YYYY hh:mm:ss') }}</TD>
+                    <TD> <a href="/processo/etapas/{{ processo.nome }}/{{ etapa.nome }}/detalhes"> {{ etapa.nome }} </a></TD>
+                    <TD>{{ etapa.descricao }}</TD>
+                    <TD>{{ etapa.executor }}</TD>
+                    {% if etapa._cls == 'EtapaFaseada' %}
+                        <TD><a href="/inclusao/{{ processo.nome }}/{{ etapa.nome }}/fase">Nova Fase</a> </TD>
+                    {% else %}
+                    <span> - </span>
+                    {% endif %}
+                </TR>
+            {% endfor %}
+        </table>
+    </div>
+</body>
+<footer class="text-center">
+    <img src="{{ url_for('static',  filename='img/favicon.svg') }}" width="3%" height="3%">
+    <script type="text/javascript">
+
+    copyright=new Date();
+
+    update=copyright.getFullYear();
+
+    document.write("Zabbix Tools © " + update);
+
+    </script>
+    <a class="grey link-alt" target="_blank" href="http://www.globo.com/">
+        Globo.com
+    </a>
+</footer>
+<script type="text/javascript">
+    $('.form-group input[type=text]').addClass('form-control')
+    $('.form-group input[type=submit]').addClass('btn btn-primary')
+</script>
