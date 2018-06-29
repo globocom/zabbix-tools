@@ -21,7 +21,9 @@ def setup():
 
 @app.route('/')
 def home():
-    return render_template('home.html')
+    processos = Processo.objects.all()
+    return render_template('processo.html', processos=processos)
+    '''NOVO HOME'''
 
 @app.route('/processo')
 def processo():
