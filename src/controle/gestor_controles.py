@@ -1,5 +1,12 @@
 from controle.models.models import *
 from mongoengine import *
+import os
+
+DB_HOST = os.getenv('DB_HOST')
+DB_PORT = os.getenv('DB_PORT')
+DB_NAME = os.getenv('DB_NAME')
+DB_USER = os.getenv('DB_USER')
+DB_PASSWORD = os.getenv('DB_PASSWORD')
 
 
 def adicionar_host_controle(hosts):
@@ -38,8 +45,7 @@ def adicionar_fase(processo, etapa_faseada, executor, objetos_afetados):
     processo.save()
 
 if __name__ == '__main__':
-    connect(db='zabbix_tool_staging', host='zabbixtool-01-152389458497.qa2.mongodb.globoi.com', port=27017,
-            username='u_zabbix_tool_st', password='jrwZXcpCBw')
+    connect(db=DB_NAME, host=DB_HOST, port=DB_PORT, username=DB_USER, password=DB_PASSWORD)
 
     criar_processo(nome='processo-1', descricao='descricao processo 1', autor='autor processo 1')
     adicionar_host_controle([{'name': 'host-2', 'hostid': '2'}])

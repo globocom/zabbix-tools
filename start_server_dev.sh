@@ -1,5 +1,15 @@
-#!/usr/bin/sh
+#!/bin/sh
 
 sh build.sh
 
-ZABBIX_URL=http://127.0.0.1 ZABBIX_USER=Admin ZABBIX_PASSWORD=zabbix FLASK_APP=src/interfaces/web/home.py flask run
+export APP_SECRET_KEY=''
+export DB_HOST=''
+export DB_PORT=''
+export DB_NAME=''
+export DB_USER=''
+export DB_PASSWORD=''
+export ZABBIX_URL=http://127.0.0.1
+export ZABBIX_USER=Admin
+export ZABBIX_PASSWORD=zabbix
+
+FLASK_APP=src/interfaces/web/home.py flask run
